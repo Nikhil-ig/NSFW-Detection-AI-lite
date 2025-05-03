@@ -574,14 +574,11 @@ import threading
 import asyncio
 
 # Initialize Flask server for health checks
-server = Flask(__name__)
+app = Flask(__name__)
 
-@server.route('/')
+@app.route('/')
 def home():
     return Response("🤖 NSFW Detection Bot is running", status=200)
-
-def run_flask():
-    server.run(host='0.0.0.0', port=10000)
 
 # Enhanced logging configuration
 logging.basicConfig(
