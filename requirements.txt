@@ -21,3 +21,4 @@ nudenet==2.0.0
 opencv-python==4.7.0.72
 pillow==9.5.0
 flask==2.3.2
+gunicorn==20.1.0
