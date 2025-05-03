@@ -1,9 +1,0 @@
-run = "pip install -r requirements.txt && gunicorn --bind 0.0.0.0:8080 app:server & python3.10 main.py"
-modules = ["python-3.10"]
-
-[nix]
-channel = "stable-24_05"
-packages = ["glib", "libGL", "libGLU", "oneDNN", "re2"]
-
-[deployment]
-run = ["sh", "-c", "pip install -r requirements.txt && gunicorn --bind 0.0.0.0:8080 app:server & python3.10 main.py"]
