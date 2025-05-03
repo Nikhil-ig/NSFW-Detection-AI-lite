@@ -573,14 +573,14 @@ from flask import Flask, Response
 import threading
 
 # Initialize Flask server for uptime monitoring
-server = Flask(__name__)
+app = Flask(__name__)
 
-@server.route('/')
+@app.route('/')
 def home():
     return Response("🤖 NSFW Detection Bot is running", status=200)
 
 def run_flask():
-    server.run(host='0.0.0.0', port=10000)  # Changed port to 10000 for Render compatibility
+    app.run(host='0.0.0.0', port=10000)  # Changed port to 10000 for Render compatibility
 
 # Enhanced logging configuration
 logging.basicConfig(
