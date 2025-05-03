@@ -2,5 +2,7 @@ services:
   - type: worker
     name: nsfw-bot
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install numpy<2
+      pip install -r requirements.txt
     startCommand: python main.py
