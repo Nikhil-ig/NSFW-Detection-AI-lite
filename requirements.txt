@@ -16,9 +16,8 @@
 # onnxruntime==1.15.1
 
 
+numpy>=2.0.0
+opencv-python-headless>=4.9.0  # Newer versions support NumPy 2.x
 python-telegram-bot==20.3
 nudenet==2.0.0
-opencv-python==4.7.0.72
 pillow==9.5.0
-flask==2.3.2
-gunicorn==20.1.0
