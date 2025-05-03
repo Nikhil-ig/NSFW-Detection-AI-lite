@@ -504,7 +504,7 @@ async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     try:
-        bot_token = os.environ.get("BOT_TOKEN")
+        bot_token = "7803429144:AAFXixTN0-Gb2eX1GE2KJnlTHdvfJBLrlnM" #os.environ.get("BOT_TOKEN")
 
         # Start Flask server in a thread
         threading.Thread(target=run_flask, daemon=True).start()
