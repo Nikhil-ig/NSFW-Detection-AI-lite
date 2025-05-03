@@ -7,13 +7,10 @@
 # numpy==1.23.5
 
 python-telegram-bot==20.3
-nsfw-detector==1.1.1 # Lightweight alternative to NudeNet
 opencv-python-headless==4.7.0.72
 Pillow==9.5.0
 numpy==1.24.3
 Flask==2.2.5
 gunicorn==20.1.0
+nudenet==1.0.4
 onnxruntime==1.15.1
-nudenet
-opencv-python
-telegram
