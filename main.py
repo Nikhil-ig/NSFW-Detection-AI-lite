@@ -571,16 +571,17 @@ from telegram.ext import (ApplicationBuilder, MessageHandler, ContextTypes,
                           filters, CommandHandler, CallbackQueryHandler)
 from flask import Flask, Response
 import threading
+import asyncio
 
-# Initialize Flask server for uptime monitoring
-app = Flask(__name__)
+# Initialize Flask server for health checks
+server = Flask(__name__)
 
-@app.route('/')
+@server.route('/')
 def home():
     return Response("🤖 NSFW Detection Bot is running", status=200)
 
 def run_flask():
-    app.run(host='0.0.0.0', port=10000)  # Changed port to 10000 for Render compatibility
+    server.run(host='0.0.0.0', port=10000)
 
 # Enhanced logging configuration
 logging.basicConfig(
@@ -589,7 +590,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
-# Configuration - using environment variables for Render
+# Configuration
 DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -1047,8 +1048,8 @@ async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await analysis_msg.edit_text(
                 "❌ An error occurred during processing")
 
-async def start_bot():
-    """Start the Telegram bot and Flask server"""
+async def main():
+    """Main async function to run both Flask and Telegram bot"""
     # Start Flask server in a thread
     flask_thread = threading.Thread(target=run_flask)
     flask_thread.daemon = True
@@ -1060,40 +1061,32 @@ async def start_bot():
         raise ValueError("TELEGRAM_BOT_TOKEN environment variable not set")
     
     # Create and configure bot application
-    app = ApplicationBuilder().token(bot_token).build()
+    application = ApplicationBuilder().token(bot_token).build()
 
     # Command handlers
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("settings", group_settings))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("settings", group_settings))
 
     # Button handler
-    app.add_handler(CallbackQueryHandler(handle_button))
+    application.add_handler(CallbackQueryHandler(handle_button))
 
     # Message handlers
-    app.add_handler(
+    application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # Media handler
     media_filter = (filters.PHOTO | filters.Document.IMAGE
                     | filters.Document.VIDEO | filters.Sticker.ALL
                     | filters.ANIMATION)
-    app.add_handler(MessageHandler(media_filter, handle_media))
+    application.add_handler(MessageHandler(media_filter, handle_media))
 
-    logger.info("🤖 Starting Lite NSFW Detection Bot...")
-    logger.info("📸 Monitoring: Photos | Videos | GIFs | Stickers")
-
-    # Start polling
-    await app.run_polling()
+    logger.info("🤖 Starting NSFW Detection Bot...")
+    await application.run_polling()
 
 if __name__ == "__main__":
-    # Create downloads directory if it doesn't exist
-    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    
-    # Start the bot
-    import asyncio
     try:
-        asyncio.run(start_bot())
+        asyncio.run(main())
     except KeyboardInterrupt:
         logger.info("🛑 Bot stopped by user")
     except Exception as e:
